@@ -27,66 +27,76 @@ cout << duration.count() << endl;
 */
 
 struct edge{
+
 	int u, v, w;
 
 	bool operator < (const edge& other) const{
 		return w < other.w;
 	}
+	
 };
 
-// Maximum number of elements in the DSU
-const int N = 10005;
+template<int N = 100005>
+struct dsu {
 
-int par[N], h[N];
+	int par[N], size[N];
 
-// Time: O(n)
-void init(int n = N){
-	loop(i, n){
-		par[i] = i;
-		h[i] = 1;
-	}
-}
-
-// Time: ~O(1)
-int find(int i){
-	if(par[i] == i){
-		return i;
-	}
-	par[i] = find(par[i]);
-	return par[i];
-}
-
-// Time: O(1)
-void unite(int i, int j){
-	int s = find(i);
-	int t = find(j);
-	if(s != t){
-		if(h[t] > h[s]){
-			swap(s, t);
-		}else if(h[t] == h[s]){
-			++h[s];
+	dsu(int n = N){
+		for(int i = 0; i < n; ++i){
+			par[i] = i;
+			size[i] = 1;
 		}
-		par[t] = s;
 	}
-}
+
+	// Time: ~O(1)
+	int find(int i){
+	    if(par[i] != i){
+	        par[i] = find(par[i]);
+	    }
+	    return par[i];
+	}
+
+	// Time: ~O(1)
+	void join(int i, int j){
+	    int s = find(i);
+	    int t = find(j);
+	    if(s != t){
+	        if(size[s] > size[t]){
+	            swap(s, t);
+	        }
+	        par[s] = t;
+	        size[t] += size[s];
+	    }
+	}
+
+	// Time: O(n)
+	void reset(int n = N){
+	    loop(i, n){
+	        par[i] = i;
+	        size[i] = 1;
+	    }
+	}
+
+};
 
 // Time: O(mlog(n)) where n = |V|, m = |E|
 ll kruskal(edge e[], int n, int m){
-	init(n); //
+	dsu<> *uf = new dsu<>(n);
 	sort(e, e + m);
 	int i = 0, k = n - 1;
 	ll mst = 0;
 	while(k > 0){
-		while(find(e[i].u) == find(e[i].v)){
+		while(uf->find(e[i].u) == uf->find(e[i].v)){
 			++i;
 			if(i == m){
 				return -1;
 			}
 		}
 		mst += e[i].w;
-		unite(e[i].u, e[i].v);
+		uf->join(e[i].u, e[i].v);
 		--k;
 	}
+	delete uf;
 	return mst;
 }
 
