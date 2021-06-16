@@ -16,6 +16,10 @@
 
 ### Shortest Paths
 
+## Linear Algebra
+
+## Linear Programming
+
 ## Mathematics
 
 ### Combinatorics
