@@ -27,6 +27,7 @@ cout << duration.count() << endl;
 */
 
 const ull MD = 1e9 + 7;
+mt19937 RNG(chrono::steady_clock::now().time_since_epoch().count());
 
 template<ull MOD>
 struct modint{
@@ -59,17 +60,17 @@ struct modint{
 
 template<class type>
 type zero(){
-    if(typeid(type) == typeid(modint<10>)){
+    /*if(typeid(type) == typeid(modint<10>)){
         return modint<MD>(0);
-    }
+    }*/
     return 0;
 }
 
 template<class type>
 type one(){
-    if(typeid(type) == typeid(modint<10>)){
+    /*if(typeid(type) == typeid(modint<10>)){
         return modint<MD>(1);
-    }
+    }*/
     return 1;
 }
 
@@ -125,19 +126,18 @@ matrix<type, N, N> identity(){
 
 template<int N, int M>
 matrix<double, N, M> random(){
-    mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
     uniform_real_distribution<> uar(0, 1);
     matrix<double, N, M> A = *(new matrix<double, N, M>());
     for(int i = 0; i < N; ++i){
         for(int j = 0; j < N; ++j){
-            A[i][j] = uar(rng);
+            A.data[i][j] = uar(RNG);
         }
     }
     return A;
 }
 
 template<class type, int N, int M>
-matrix<type, N, M> sum(matrix<type, N, M> A, matrix<type, N, M> B){
+matrix<type, N, M> sum(matrix<type, N, M> &A, matrix<type, N, M> &B){
     matrix<type, N, M> S = *(new matrix<type, N, M>());
     memcpy(S.data, A.data, N * M * sizeof(type));
     loop(i, N){
@@ -149,7 +149,7 @@ matrix<type, N, M> sum(matrix<type, N, M> A, matrix<type, N, M> B){
 }
 
 template<class type, int L, int N, int M>
-matrix<type, L, M> product(matrix<type, L, N> A, matrix<type, N, M> B){
+matrix<type, L, M> product(matrix<type, L, N> &A, matrix<type, N, M> &B){
     matrix<type, L, M> P = *(new matrix<type, L, M>());
     for(int i = 0; i < L; ++i){
         for(int j = 0; j < M; ++j){
@@ -163,7 +163,7 @@ matrix<type, L, M> product(matrix<type, L, N> A, matrix<type, N, M> B){
 
 // Time: O(N^3log(n)) (could be sped up to O(t(n) + log(Nlog(n))) with O(t(n)) eigendecomposition)
 template<class type, int N>
-matrix<type, N, N> power(matrix<type, N, N> A, ull n){
+matrix<type, N, N> power(matrix<type, N, N> &A, ull n){
     matrix<type, N, N> P = identity<type, N>();
     while(n){
         if(n & 1){
@@ -178,15 +178,27 @@ matrix<type, N, N> power(matrix<type, N, N> A, ull n){
 modint<MD> D[2][2] = {{modint<MD>(0), modint<MD>(1)},
                   {modint<MD>(1), modint<MD>(1)}};
 
+const int X = 200;
+
+
 int main(){
 	/*	// IO
 	ios_base::sync_with_stdio(false);	// unsync C- and C++-streams (stdio, iostream)
 	cin.tie(NULL);	// untie cin from cout (no automatic flush before read)
 	*/
-    ull n;
-    cin >> n;
-    matrix<modint<MD>, 2, 2> A(&D[0][0]);
-    auto P = power(A, n);
-    cout << P.data[0][1] << endl;
+    auto start = chrono::high_resolution_clock::now();
+    loop(i, 1){
+        matrix<double, X, X> A = random<X, X>(), B = random<X, X>();
+        auto C = sum(A, B);
+        cout << C.data[2][3] << endl;
+        C = product(A, B);
+        cout << C.data[0][1] << endl;
+        delete &A;
+        delete &B;
+        delete &C;
+    }
+    auto stop = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+    cout << duration.count() << endl;
     return 0;
 }
