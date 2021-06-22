@@ -31,8 +31,22 @@ cout << duration.count() << endl;
 // EEA
 
 // Time: O(sqrt(n))
-map<ull, int> factor(ull n){
-    ;
+map<ull, int> *factor(ull n){
+    map<ull, int> *factorization = new map<ull, int>;
+    while(n % 2 == 0){
+        ++(*factorization)[2];
+        n /= 2;
+    }
+    for(ull f = 3; f * f <= n; f += 2){
+        while(n % f == 0){
+            ++(*factorization)[f];
+            n /= f;
+        }
+    }
+    if(n != 1){
+        ++(*factorization)[n];
+    }
+    return factorization;
 }
 
 // Time: 
