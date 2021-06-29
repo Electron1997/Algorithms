@@ -22,7 +22,6 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 const int N = 10000;
 
-map<string, int> city;
 ull dist[N];
 vector<pair<int, ull>> G[N];
 priority_queue<pair<ull, int>, vector<pair<ull, int>>, greater<pair<ull, int>>> H;
@@ -68,7 +67,7 @@ int main(){
 
     int T;
     cin >> T;
-    loop($, T){
+    loop(tc, T){
         int n, m;
         cin >> n >> m;
         loop(i, n){
