@@ -22,6 +22,7 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 const int N = 10000;
 
+map<string, int> city;
 ull dist[N];
 vector<pair<int, ull>> G[N];
 priority_queue<pair<ull, int>, vector<pair<ull, int>>, greater<pair<ull, int>>> H;
@@ -32,17 +33,25 @@ ull dijkstra(int s, int t, int n = N){
     for(int v = 0; v < n; ++v){
         dist[v] = ULLONG_MAX;
     }
+    dist[s] = 0;
     H.push({0, s});
     while(!H.empty()){
         pair<ull, int> p = H.top();
         H.pop();
-        if(dist[p.second] > p.first){
-            dist[p.second] = p.first;
-            if(p.second == t){
-                return p.first;
-            }
-            for(pair<int, ull> v : G[p.second]){
-                H.push({p.first + v.second, v.first});
+        int u = p.second;
+        ull dist_u = p.first;
+        if(dist_u != dist[u]){
+            continue;
+        }
+        if(u == t){
+            return dist_u;
+        }
+        for(pair<int, ull> e : G[u]){
+            int v = e.first;
+            ull dist_v = dist[u] + e.second; 
+            if(dist_v < dist[v]){
+                dist[v] = dist_v;
+                H.push({dist_v, v});
             }
         }
     }
