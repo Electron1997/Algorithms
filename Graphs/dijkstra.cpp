@@ -32,8 +32,8 @@ ull dijkstra(int s, int t, int n = N){
     for(int v = 0; v < n; ++v){
         dist[v] = ULLONG_MAX;
     }
-    dist[s] = 0;
     H.push({0, s});
+    dist[s] = 0;
     while(!H.empty()){
         pair<ull, int> p = H.top();
         H.pop();
@@ -49,8 +49,8 @@ ull dijkstra(int s, int t, int n = N){
             int v = e.first;
             ull dist_v = dist[u] + e.second; 
             if(dist_v < dist[v]){
-                dist[v] = dist_v;
                 H.push({dist_v, v});
+                dist[v] = dist_v;
             }
         }
     }
