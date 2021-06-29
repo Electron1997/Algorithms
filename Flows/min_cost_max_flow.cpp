@@ -31,14 +31,20 @@ cout << duration.count() << endl;
 typedef ll c_type; // Type for cost
 typedef ll f_type; // Type for flow
 
-const c_type FREE = 0, IMP = LLONG_MAX;
+const c_type FREE = 0, IMP = LLONG_MAX / 2;
 const f_type ZERO = 0, INF = LLONG_MAX;
+
+struct edge{
+    int u, v;
+    c_type w;
+};
 
 const int N = 1000; // Maximum number of nodes in the network
 
 c_type cost[N][N], dist[N];
 f_type cap[N][N], flow[N][N];
 vector<int> adj[N];
+vector<edge> edges;
 int pre[N];
 priority_queue<pair<c_type, int>, vector<pair<c_type, int> >, greater<pair<c_type, int> > > Q;
 
@@ -46,6 +52,7 @@ priority_queue<pair<c_type, int>, vector<pair<c_type, int> >, greater<pair<c_typ
 void init(int n = N){
     loop(i, n){
         adj[i].clear();
+        edges.clear();
         loop(j, n){
             cap[i][j] = ZERO;
             cost[i][j] = FREE;
@@ -61,9 +68,10 @@ void add(int u, int v, f_type c, c_type w = FREE){
     cap[u][v] += c;
     cost[u][v] = w;
     cost[v][u] = -w;
+    edges.push_back({u, v, w});
 }
 
-// Dijkstra (works only for positive costs)
+// Bellman-Ford
 bool findPath(int n = N, int s = 0, int t = N - 1){
     loop(i, n){
         dist[i] = IMP;
@@ -73,28 +81,24 @@ bool findPath(int n = N, int s = 0, int t = N - 1){
     }
     dist[s] = 0;
     pre[s] = -2;
-    Q.push({FREE, s});
-    while(!Q.empty()){
-        pair<c_type, int> p = Q.top();
-        int u = p.second;
-        c_type dist_u = p.first;
-        Q.pop();
-        if(dist[u] != dist_u){
-            continue;
-        }
-        if(u == t){
-            return true;
-        }
-        for(int v : adj[u]){
-            f_type d = cap[u][v] - flow[u][v];
-            if(pre[v] == -1 && d > ZERO){
-                if(dist_u + cost[u][v] < dist[v]){
-                    dist[v] = dist_u + cost[u][v];
-                    pre[v] = u;
-                    Q.push({dist[v], v});
+    for(int i = 0; i < n; ++i){
+        for(edge e : edges){
+            if(flow[e.v][e.u] < cap[e.v][e.u]){
+                if(dist[e.v] + e.w < dist[e.u]){
+                    dist[e.u] = dist[e.v] + e.w;
+                    pre[e.u] = e.v;
+                }
+            }
+            if(flow[e.u][e.v] < cap[e.u][e.v]){
+                if(dist[e.u] + e.w < dist[e.v]){    // undirected edges
+                    dist[e.v] = dist[e.u] + e.w;
+                    pre[e.v] = e.u;
                 }
             }
         }
+    }
+    if(dist[t] != IMP){
+        return true;
     }
     return false;
 }
