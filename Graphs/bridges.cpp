@@ -44,7 +44,7 @@ int dfs(int v, int par){
     return low;
 }
 
-void compute_bridges(int n = N){
+inline void find_bridges(int n = N){
     bridges.clear();
     id = 1;
     memset(in, 0, n * sizeof(int));
@@ -73,7 +73,7 @@ int main(){
             graph[u - 1].push_back(v - 1);
             graph[v - 1].push_back(u - 1);
         }
-        compute_bridges(n);
+        find_bridges(n);
         cout << "Caso #" << t + 1 << endl;
         if(bridges.size()){
             cout << bridges.size() << endl;
