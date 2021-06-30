@@ -44,7 +44,7 @@ int dfs(int v){
     return low;
 }
 
-void compute_articulation_points(int n = N){
+inline void find_articulation_points(int n = N){
     articulation_points.clear();
     id = 1;
     memset(in, 0, n * sizeof(int));
@@ -94,7 +94,7 @@ int main(){
                 graph[v - 1].push_back(u - 1);
             }
         }
-        compute_articulation_points(n);
+        find_articulation_points(n);
         cout << articulation_points.size() << endl;
     }
 
