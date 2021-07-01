@@ -38,7 +38,7 @@ inline void precompute_spf(int n = N){
 }
 
 // Time: O(log(n))
-map<int, int> factorize(int n){
+inline map<int, int> factorize(int n){
     map<int, int> factorization;
     while(spf[n]){
         ++factorization[spf[n]];
