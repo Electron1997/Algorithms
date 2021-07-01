@@ -20,7 +20,7 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 const int N = 100005;
 
-int a[N], spf[N];
+int spf[N];
 
 // Time: O(nlog(log(n)))
 inline void precompute_spf(int n = N){
