@@ -19,20 +19,20 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 */
 
 // Time: O(sqrt(n))
-map<ull, int> *factor(ull n){
-    map<ull, int> *factorization = new map<ull, int>;
+inline map<ull, int> factorize(ull n){
+    map<ull, int> factorization;
     while(n % 2 == 0){
-        ++(*factorization)[2];
+        ++factorization[2];
         n /= 2;
     }
     for(ull f = 3; f * f <= n; f += 2){
         while(n % f == 0){
-            ++(*factorization)[f];
+            ++factorization[f];
             n /= f;
         }
     }
     if(n != 1){
-        ++(*factorization)[n];
+        ++factorization[n];
     }
     return factorization;
 }
@@ -50,7 +50,7 @@ int main(){
     loop(t, T){
         ull n;
         cin >> n;
-        map<ull, int> factorization = *(factor(n));
+        map<ull, int> factorization = factorize(n);
         cout << n << " = ";
         for(pair<ull, int> p : factorization){
             cout << p.f << "^" << p.s << " ";
