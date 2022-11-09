@@ -89,6 +89,19 @@ inline bool intersect(point r1, point r2, point s1, point s2){
     return !empty(ix) && !empty(iy);
 }
 
+/* 
+    Returns TWICE the area of a simple polygon (not necessarily convex, but not self-intersecting and without holes).
+    Points must be stored in p in clockwise or counterclockwise order.
+    Time: O(n)
+*/
+inline ll area(point p[], int n){
+    ll a = 0;
+    for(int i = 2; i < n; ++i){
+        a += det(diff(p[0], p[i]), diff(p[i - 1], p[i]));
+    }
+    return abs(a);
+}
+
 int main(){
     /*
     auto start = chrono::high_resolution_clock::now();
