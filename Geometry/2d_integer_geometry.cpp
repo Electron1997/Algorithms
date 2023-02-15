@@ -13,10 +13,9 @@ using namespace std;
 typedef long long ll;
 typedef unsigned long long ull;
 
-/*  // RANDOM NUMBER GENERATOR
+// RANDOM NUMBER GENERATOR
 // rng() generates u.a.r. from [0, 2^32 - 1]
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-*/
 
 typedef struct {
     ll x, y;
@@ -64,10 +63,11 @@ inline bool empty(point i){
     return i.x > i.y;
 }
 
-/* Line L through l1 and l2. Looking from l1 to l2:
-    (x, y) on L                 --> returns 0
-    (x, y) to the left of L     --> returns > 0
-    (x, y) to the right of L    --> returns < 0
+/* 
+    Line L through l1 and l2. Looking from l1 to l2:
+        p on L                 --> returns 0
+        p to the left of L     --> returns > 0
+        p to the right of L    --> returns < 0
 */
 inline ll point_vs_line(point l1, point l2, point p){
     return det(diff(l1, l2), diff(l1, p));
@@ -102,6 +102,45 @@ inline ll area(point p[], int n){
     return abs(a);
 }
 
+inline point random_point(int m = 1e9){
+    return {rng() % m, rng() % m};
+}
+
+/*  
+    THIS IS A MONTE CARLO ALGORITHM!
+    Vertex list p represents polygon (not necessarily convex, may be self intersecting):
+        x strictly inside p         --> returns > 0
+        x strictly outside p        --> returns < 0
+        x on boundary               --> returns 0
+*/
+inline ll point_vs_polygon(point x, point p[], int n){
+    point r = random_point(); r.x += 1e9; r.y += 1e9;
+    int cnt = 0;
+    for(int i = 0; i < n; ++i){
+        if(intersect(p[i], p[(i + 1) % n], x, x)) return 0;
+        if(intersect(x, r, p[i], p[(i + 1) % n])) ++cnt;
+    }
+    if(cnt & 1) return 1;
+    return -1;
+}
+
+// Returns number of integer points on the boundary of polygon p (including vertices)
+inline ull boundary_points(point p[], int n){
+    ull cnt = 0;
+    for(int i = 0; i < n; ++i){
+        point d = diff(p[i], p[(i + 1) % n]);
+        cnt += __gcd(abs(d.x), abs(d.y));
+    }
+    return cnt;
+}
+
+// Computes number of interior integer points via Pick's theorem
+inline ull interior_points(point p[], int n){
+    return (area(p, n) + 2 - boundary_points(p, n)) / 2;
+}
+
+point x, polygon[1000];
+
 int main(){
     /*
     auto start = chrono::high_resolution_clock::now();
@@ -110,15 +149,19 @@ int main(){
     ios_base::sync_with_stdio(false);   // unsync C- and C++-streams (stdio, iostream)
     cin.tie(NULL);  // untie cin from cout (no automatic flush before read)
 
-    int T;
-    cin >> T;
-    loop(t, T){
-        point r1, r2, s1, s2;
-        cin >> r1.x >> r1.y >> r2.x >> r2.y >> s1.x >> s1.y >> s2.x >> s2.y;
-        if(intersect(r1, r2, s1, s2)){
-            cout << "YES" << endl;
+    int n, m; cin >> n >> m;
+    loop(i, n){
+        cin >> polygon[i].x >> polygon[i].y;
+    }
+    loop(i, m){
+        cin >> x.x >> x.y;
+        ll u = point_vs_polygon(x, polygon, n);
+        if(u > 0){
+            cout << "INSIDE" << endl;
+        }else if(u < 0){
+            cout << "OUTSIDE" << endl;
         }else{
-            cout << "NO" << endl;
+            cout << "BOUNDARY" << endl;
         }
     }
 
