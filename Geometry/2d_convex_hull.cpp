@@ -39,16 +39,16 @@ struct point{
     }
 };
 
-
-
 inline ll det(const point& p, const point& q){
     return p.x * q.y - p.y * q.x;
 }
 
-// Time: O(nlog(n))
+/* 
+    Andrew's monotone chain algorithm (Time: O(nlog(n)))
+    !!! p must be sorted !!!
+*/
 inline vector<point> convex_hull(point p[], int n, bool top){
     vector<point> hull;
-    sort(p, p + n);
     hull.push_back(p[0]);
     hull.push_back(p[1]);
     for(int i = 2; i < n; ++i){
@@ -82,9 +82,9 @@ int main(){
     loop(i, n){
         cin >> p[i].x >> p[i].y;
     }
+    sort(p, p + n);
     vector<point> top = convex_hull(p, n, true);
     vector<point> bot = convex_hull(p, n, false);
-
     set<point> hull;
     for(point pt : top){
         hull.insert(pt);
