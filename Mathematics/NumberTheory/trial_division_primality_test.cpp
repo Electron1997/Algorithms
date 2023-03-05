@@ -20,6 +20,7 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 // Time: O(sqrt(n))
 bool prime(ull n){
+    if(n == 2) return true;
     if(n % 2 == 0){
         return false;
     }
