@@ -13,7 +13,7 @@ using namespace std;
 typedef long long ll;
 typedef unsigned long long ull;
 
-/*	// RANDOM NUMBER GENERATOR
+/*  // RANDOM NUMBER GENERATOR
 // rng() generates u.a.r. from [0, 2^32 - 1]
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 */
@@ -27,6 +27,7 @@ cout << duration.count() << endl;
 */
 
 const ull MD = 1e9 + 7;
+
 mt19937 RNG(chrono::steady_clock::now().time_since_epoch().count());
 
 template<ull MOD>
@@ -58,46 +59,42 @@ struct modint{
 
 };
 
+typedef modint<MD> MI;
+
 template<class type>
 type zero(){
-    /*if(typeid(type) == typeid(modint<10>)){
-        return modint<MD>(0);
-    }*/
-    return 0;
+    return MI(0);
 }
 
 template<class type>
 type one(){
-    /*if(typeid(type) == typeid(modint<10>)){
-        return modint<MD>(1);
-    }*/
-    return 1;
+    return MI(1);
 }
 
-template<class type, int N, int M>
+template<class type, size_t N, size_t M>
 struct matrix{
 
     type data[N][M];
 
     matrix(){
-        for(int i = 0; i < N; ++i){
-            for(int j = 0; j < M; ++j){
+        for(size_t i = 0; i < N; ++i){
+            for(size_t j = 0; j < M; ++j){
                 data[i][j] = zero<type>();
             }
         }
     }
 
     matrix(type *ptr){
-        for(int i = 0; i < N; ++i){
-            for(int j = 0; j < M; ++j){
+        for(size_t i = 0; i < N; ++i){
+            for(size_t j = 0; j < M; ++j){
                 data[i][j] = *(ptr + M * i + j);
             }
         }
     }
 
     friend ostream &operator << (ostream &out, const matrix &A){
-        for(int i = 0; i < N; ++i){
-            for(int j = 0; j < M; ++j){
+        for(size_t i = 0; i < N; ++i){
+            for(size_t j = 0; j < M; ++j){
                 out << A.data[i][j] << " ";
             }
             out << endl;
@@ -106,8 +103,8 @@ struct matrix{
     }
 
     friend istream &operator >> (istream &in, matrix &A){
-        for(int i = 0; i < N; ++i){
-            for(int j = 0; j < M; ++j){
+        for(size_t i = 0; i < N; ++i){
+            for(size_t j = 0; j < M; ++j){
                 in >> A.data[i][j];
             }
         }
@@ -115,45 +112,56 @@ struct matrix{
 
 };
 
-template<class type, int N>
+template<class type, size_t N>
 matrix<type, N, N> identity(){
     matrix<type, N, N> I = *(new matrix<type, N, N>());
-    for(int i = 0; i < N; ++i){
+    for(size_t i = 0; i < N; ++i){
         I.data[i][i] = one<type>();
     }
     return I;
 }
 
-template<int N, int M>
+template<class type, size_t N, size_t M>
+matrix<type, N, M> ones(){
+    matrix<type, N, M> O = *(new matrix<type, N, M>());
+    for(size_t i = 0; i < N; ++i){
+        for(size_t j = 0; j < M; ++j){
+            O.data[i][j] = one<type>();
+        }
+    }
+    return O;
+}
+
+template<size_t N, size_t M>
 matrix<double, N, M> random(){
     uniform_real_distribution<> uar(0, 1);
     matrix<double, N, M> A = *(new matrix<double, N, M>());
-    for(int i = 0; i < N; ++i){
-        for(int j = 0; j < N; ++j){
+    for(size_t i = 0; i < N; ++i){
+        for(size_t j = 0; j < N; ++j){
             A.data[i][j] = uar(RNG);
         }
     }
     return A;
 }
 
-template<class type, int N, int M>
+template<class type, size_t N, size_t M>
 matrix<type, N, M> sum(matrix<type, N, M> &A, matrix<type, N, M> &B){
     matrix<type, N, M> S = *(new matrix<type, N, M>());
     memcpy(S.data, A.data, N * M * sizeof(type));
-    loop(i, N){
-        loop(j, M){
+    for(size_t i = 0; i < N; ++i){
+        for(size_t j = 0; j < M; ++j){
             S.data[i][j] = S.data[i][j] + B.data[i][j];
         }
     }
     return S;
 }
 
-template<class type, int L, int N, int M>
+template<class type, size_t L, size_t N, size_t M>
 matrix<type, L, M> product(matrix<type, L, N> &A, matrix<type, N, M> &B){
     matrix<type, L, M> P = *(new matrix<type, L, M>());
-    for(int i = 0; i < L; ++i){
-        for(int j = 0; j < M; ++j){
-            for(int k = 0; k < N; ++k){
+    for(size_t i = 0; i < L; ++i){
+        for(size_t j = 0; j < M; ++j){
+            for(size_t k = 0; k < N; ++k){
                 P.data[i][j] = P.data[i][j] + A.data[i][k] * B.data[k][j];
             }
         }
@@ -162,7 +170,7 @@ matrix<type, L, M> product(matrix<type, L, N> &A, matrix<type, N, M> &B){
 }
 
 // Time: O(N^3log(n)) (could be sped up to O(t(n) + log(Nlog(n))) with O(t(n)) eigendecomposition)
-template<class type, int N>
+template<class type, size_t N>
 matrix<type, N, N> power(matrix<type, N, N> &A, ull n){
     matrix<type, N, N> P = identity<type, N>();
     while(n){
@@ -175,30 +183,38 @@ matrix<type, N, N> power(matrix<type, N, N> &A, ull n){
     return P;
 }
 
-modint<MD> D[2][2] = {{modint<MD>(0), modint<MD>(1)},
-                  {modint<MD>(1), modint<MD>(1)}};
+inline size_t idx(char c){
+    if('A' <= c && c <= 'Z') return c - 'A' + 26;
+    return c - 'a';
+}
 
-const int X = 200;
-
+const int K = 52;
 
 int main(){
-	/*	// IO
-	ios_base::sync_with_stdio(false);	// unsync C- and C++-streams (stdio, iostream)
-	cin.tie(NULL);	// untie cin from cout (no automatic flush before read)
-	*/
-    auto start = chrono::high_resolution_clock::now();
-    loop(i, 1){
-        matrix<double, X, X> A = random<X, X>(), B = random<X, X>();
-        auto C = sum(A, B);
-        cout << C.data[2][3] << endl;
-        C = product(A, B);
-        cout << C.data[0][1] << endl;
-        delete &A;
-        delete &B;
-        delete &C;
+
+    // IO
+    ios_base::sync_with_stdio(false);   // unsync C- and C++-streams (stdio, iostream)
+    cin.tie(NULL);  // untie cin from cout (no automatic flush before read)
+
+    ull n; int m, k; cin >> n >> m >> k;
+    matrix<MI, K, K> DP;
+    loop(i, m){
+        loop(j, m){
+            DP.data[i][j] = one<MI>();
+        }
     }
-    auto stop = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
-    cout << duration.count() << endl;
+    loop(i, k){
+        string s; cin >> s;
+        DP.data[idx(s[1])][idx(s[0])] = zero<MI>();
+    }
+    DP = power<MI, K>(DP, n - 1);
+    MI sol = zero<MI>();
+    loop(i, m){
+        loop(j, m){
+            sol = sol + DP.data[i][j];
+        }
+    }
+    cout << sol << endl;
+
     return 0;
 }
