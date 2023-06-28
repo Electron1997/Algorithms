@@ -19,7 +19,7 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 */
 
 // Time: O(log(m))
-ull power(ull a, ull b, ull m){
+inline ull power(ull a, ull b, ull m){
     ull p = 1;
     a %= m;
     while(b){
@@ -35,7 +35,7 @@ ull power(ull a, ull b, ull m){
 }
 
 // Time: O(log(p))
-ull inverse(ull a, ull p){
+inline ull inverse(ull a, ull p){
     return power(a, p - 2, p);
 }
 
