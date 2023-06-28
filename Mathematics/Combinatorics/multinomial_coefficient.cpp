@@ -53,6 +53,12 @@ inline ull inverse(ull n, ull mod = MOD){
     return bin_exp(n, mod - 2);
 }
 
+inline ull binomial_coefficient(int n, int k, ull mod = MOD){
+    if(k > n) return 0;
+    ull den = factorial[k] * factorial[n - k] % mod;
+    return factorial[n] * inverse(den, mod) % mod;
+}
+
 // ks must sum to n
 inline ull multinomial_coefficient(int n, vector<int>& ks, ull mod = MOD){
     ull den = 1;
