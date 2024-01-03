@@ -53,6 +53,9 @@ inline ull pow(ull a, ull b){
 inline ull inv(ull a){
     return pow(a, MOD - 2);
 }
+inline ull div(ull a, ull b){
+    return mul(a, inv(b));
+}
 
 constexpr size_t N = 2500, M = 1e5;
 
