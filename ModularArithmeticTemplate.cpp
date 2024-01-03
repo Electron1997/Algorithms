@@ -25,7 +25,7 @@ typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 */
 
-constexpr ull MOD = 1e9 + 7;
+constexpr ull MOD = 998244353;
 
 inline ull add(ull a, ull b){
     return (a + b) % MOD; 
@@ -57,9 +57,14 @@ inline ull div(ull a, ull b){
     return mul(a, inv(b));
 }
 
-constexpr size_t N = 2500, M = 1e5;
+constexpr size_t N = 1e5, M = 3e5;
 
-ull a[N], t[M + 1];
+ull a[N], f[M + 1];
+
+inline ull aux_f(int i){
+    if(i < 0) return 0;
+    return f[i];
+}
 
 int main(){
     /*
@@ -68,23 +73,24 @@ int main(){
     
     ios_base::sync_with_stdio(false);   // unsync C- and C++-streams (stdio, iostream)
     cin.tie(NULL);  // untie cin from cout (no automatic flush before read)
-
+    
     int n; cin >> n;
-    ull b = 0;
+    ull s = 0;
     loop(i, n){
         cin >> a[i];
-        b += a[i];
+        s += a[i];
     }
-    ull acc = 0;
-    for(int i = 1; i <= M; ++i){
-        acc = add(acc, inv(b - i + 1));
-        t[i] = mul(b - 1, mul(sub(b, i), acc));
+    for(int i = 0; i <= M; ++i){
+        ull b = sub(add(1, aux_f(i - 1)), aux_f(i - 2));
+        ull c = div(mul(sub(i, 1), n - 1), s + 1 - i);
+        f[i] = add(mul(b, c), aux_f(i - 1));
     }
-    ull sol = 0;
+    ull lo = 0;
     loop(i, n){
-        sol = add(sol, t[a[i]]);
+        lo = add(lo, f[a[i]]);
     }
-    cout << sol << endl;
+    ull hi = add(f[s], mul(n - 1, f[0]));
+    cout << sub(hi, lo) << endl;
 
     /*
     auto stop = chrono::high_resolution_clock::now();
