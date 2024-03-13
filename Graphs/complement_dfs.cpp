@@ -1,4 +1,4 @@
-// Solution of https://codeforces.com/contest/1242/problem/B
+// Solution to https://codeforces.com/contest/1242/problem/B
 #include <bits/stdc++.h>
 
 #define f first
