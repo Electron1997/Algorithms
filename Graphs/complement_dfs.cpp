@@ -1,4 +1,4 @@
-// Solution to https://codeforces.com/contest/1242/problem/B
+// Solution to https://codeforces.com/problemset/problem/920/E
 #include <bits/stdc++.h>
 
 #define f first
@@ -26,19 +26,21 @@ typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 */
 
-constexpr size_t N = 1e5;
+constexpr size_t N = 2e5;
 
 set<int> adj[N], unvis;
+int lbl[N], sz[N] = {0};
 
-void dfs(int s){
+void dfs(int s, int id){
     // Could check, but a bit slower
     unvis.erase(s);
+    lbl[s] = id;
     auto it = unvis.begin();
     if(it == unvis.end()) return;
     int v = *it;
     while(true){
         if(!adj[s].count(v)){
-            dfs(v);
+            dfs(v, id);
         }
         auto it = unvis.upper_bound(v);
         if(it == unvis.end()) break;
@@ -51,7 +53,7 @@ inline int count_components(int n){
     loop(i, n) unvis.insert(i);
     int cnt = 0;
     while(unvis.size()){
-        dfs(*unvis.begin());
+        dfs(*unvis.begin(), cnt);
         ++cnt;
     }
     return cnt;
@@ -71,7 +73,13 @@ int main(){
         adj[u].insert(v);
         adj[v].insert(u);
     }
-    cout << count_components(n) - 1 << endl;
+    int cnt = count_components(n);
+    loop(i, n){
+        ++sz[lbl[i]];
+    }
+    sort(sz, sz + cnt);
+    cout << cnt << endl;
+    show(sz, cnt);
 
     /*
     auto stop = chrono::high_resolution_clock::now();
