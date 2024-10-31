@@ -26,8 +26,6 @@ typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 */
 
-// Space: O(n), Time: O(nlog^2(n)) often with good constant
-// Time O(nlog(n)) is possible with counting based radix sort
 constexpr size_t N = 3e5;
  
 int l, n, suf[N + 1], c[N + 1], aux[N + 1];
@@ -41,6 +39,8 @@ inline bool cmp(const int i, const int j){
     return c[i] < c[j];
 }
 
+// Space: O(n), Time: O(nlog^2(n)) often with good constant
+// Time O(nlog(n)) is possible with counting based radix sort
 inline void comp_suf(){
     s += '$';
     n = s.size();
@@ -60,6 +60,23 @@ inline void comp_suf(){
         loop(i, n) c[i] = aux[i];
         l <<= 1;
     }
+}
+
+// O(n)
+inline vector<int> comp_lcp(string& s, vector<int>& suf){
+    size_t n = s.size();
+    vector<int> pos(n), lcp(n);
+    loop(i, n){
+        pos[suf[i]] = i;
+    }
+    int k = 0;
+    loop(i, n - 1){
+        int j = suf[pos[i] - 1];
+        while(i + k < n && j + k < n && s[i + k] == s[j + k]) ++k;
+        lcp[pos[i] - 1] = k;
+        k = max(0, k - 1);
+    }
+    return lcp;
 }
  
 int main(){
