@@ -13,17 +13,20 @@ using namespace std;
 typedef long long ll;
 typedef unsigned long long ull;
 
-/*	// RANDOM NUMBER GENERATOR
-// rng() generates u.a.r. from [0, 2^32 - 1]
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+/*
+// SET WITH INDEXING
+// Implements logarithmic find_by_order() and order_of_key()
+// With less_equal<T> erase does not work!
+#include <ext/pb_ds/assoc_container.hpp>
+using namespace __gnu_pbds;
+
+template<typename T>
+using indexed_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 */
 
-/* // TIME
-auto start = chrono::high_resolution_clock::now();
-// ...
-auto stop = chrono::high_resolution_clock::now();
-auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
-cout << duration.count() << endl;
+/*  // RANDOM NUMBER GENERATOR
+// rng() generates u.a.r. from [0, 2^32 - 1]
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 */
 
 int main(){
