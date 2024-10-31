@@ -30,14 +30,23 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 */
 
 int main(){
-	/*	// IO
-	ios_base::sync_with_stdio(false);	// unsync C- and C++-streams (stdio, iostream)
-	cin.tie(NULL);	// untie cin from cout (no automatic flush before read)
-	*/
+    /*
+    auto start = chrono::high_resolution_clock::now();
+    */
+    
+    ios_base::sync_with_stdio(false);   // unsync C- and C++-streams (stdio, iostream)
+    cin.tie(NULL);  // untie cin from cout (no automatic flush before read)
+
     int T;
     cin >> T;
     loop(t, T){
         // Solve test case here
     }
+
+    /*
+    auto stop = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+    cout << duration.count() << endl;
+    */
     return 0;
 }
