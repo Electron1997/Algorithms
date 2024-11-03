@@ -43,6 +43,10 @@ struct modint{
         return (val + b.val) % MOD;
     }
 
+    modint operator - (const modint &b) const {
+        return (val + MOD - b.val) % MOD;
+    }
+
     modint operator * (const modint &b) const {
         return (val * b.val) % MOD;
     }
