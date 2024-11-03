@@ -169,7 +169,7 @@ matrix<type, L, M> product(matrix<type, L, N> &A, matrix<type, N, M> &B){
     return P;
 }
 
-// Time: O(N^3log(n)) (could be sped up to O(t(n) + log(Nlog(n))) with O(t(n)) eigendecomposition)
+// Time: O(N^3log(n)) (could be sped up to O(N^3 + t(N) + Nlog(n)) with O(t(N)) eigendecomposition)
 template<class type, size_t N>
 matrix<type, N, N> power(matrix<type, N, N> &A, ull n){
     matrix<type, N, N> P = identity<type, N>();
