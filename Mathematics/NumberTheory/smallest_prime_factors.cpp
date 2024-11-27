@@ -24,7 +24,7 @@ int spf[N];
 
 // Time: O(nlog(log(n)))
 inline void precompute_spf(int n = N){
-    memset(spf, 0, N * sizeof(int));
+    loop(i, N) spf[i] = 0;
     for(int i = 2; i < N; i += 2){
         spf[i] = 2;
     }
