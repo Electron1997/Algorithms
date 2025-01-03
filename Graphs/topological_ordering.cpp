@@ -51,8 +51,8 @@ void dfs_ts(int v){
 }
 
 inline bool is_cyclic(int n = N){
-    memset(done, false, n * sizeof(done[0]));
-    memset(visited, false, n * sizeof(visited[0]));
+    loop(i, n) done[i] = false;
+    loop(i, n) visited[i] = false;
     bool cycle = false;
     for(int v = 0; v < n; ++v){
         if(!visited[v]){
@@ -67,7 +67,7 @@ inline bool is_cyclic(int n = N){
 
 // G must be acyclic!
 inline void topological_order(int n = N){
-    memset(visited, false, n * sizeof(visited[0]));
+    loop(i, n) visited[i] = false;
     pos = n - 1;
     for(int v = 0; v < n; ++v){
         if(!visited[v] && in_deg[v] == 0){
@@ -88,6 +88,7 @@ int main(){
     cin >> n;
 
     memset(in_deg, 0, 26 * sizeof(in_deg[0]));
+    loop(i, 26) in_deg[i] = 0;
     bool possible = true;
     string s1, s2;
     cin >> s1;
