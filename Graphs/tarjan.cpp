@@ -100,7 +100,7 @@ int main(){
         adj[u].push_back(v);
     }
     tarjan(n);
-    cout << comp - 1 << endl;
+    cout << comp << endl;
     show(scc, n);
 
     /*
