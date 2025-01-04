@@ -1,4 +1,4 @@
-// Solution for https://cses.fi/problemset/task/1682
+// Solution for https://cses.fi/problemset/task/1683
 #include <bits/stdc++.h>
 
 #define f first
@@ -57,10 +57,12 @@ void dfs(int v){
     if(in_order[v] == low[v]){
         while(st.top() != v){
             scc[st.top()] = comp;
+            active[st.top()] = false;
             st.pop();
         }
         scc[v] = comp++;
         st.pop();
+        active[v] = false;
     }
 }
 
@@ -97,24 +99,8 @@ int main(){
         adj[u].push_back(v);
     }
     tarjan(n);
-    bool one_scc = true;
-    int u;
-    loop(v, n){
-        if(scc[v] != scc[0]){
-            one_scc = false;
-            u = v;
-            break;
-        }
-    }
-    cout << (one_scc ? "YES" : "NO") << endl;
-    if(!one_scc){
-        compute_condensation_DAG(n);
-        if(adj_scc[scc[0]].count(scc[u])){
-            cout << u + 1 << " 1" << endl;
-        }else{
-            cout << "1 " << u + 1 << endl;
-        }
-    }
+    cout << comp - 1 << endl;
+    show(scc, n);
 
     /*
     auto stop = chrono::high_resolution_clock::now();
