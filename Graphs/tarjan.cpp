@@ -55,28 +55,29 @@ void dfs(int v){
         }
     }
     if(in_order[v] == low[v]){
+        ++comp;
         while(st.top() != v){
             scc[st.top()] = comp;
             active[st.top()] = false;
             st.pop();
         }
-        scc[v] = comp++;
+        scc[v] = comp;
         st.pop();
         active[v] = false;
     }
 }
-
+ 
 void tarjan(int n){
     loop(v, n) active[v] = false;
     loop(v, n) in_order[v] = 0;
-    comp = 1, ind = 1;
+    comp = 0, ind = 1;
     loop(v, n){
         if(!in_order[v]){
             dfs(v);
         }
     }
 }
-
+ 
 void compute_condensation_DAG(int n){
     loop(v, n){
         for(int u : adj[v]){
