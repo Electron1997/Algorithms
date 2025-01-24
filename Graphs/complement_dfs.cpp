@@ -42,7 +42,7 @@ void dfs(int s, int id){
         if(!adj[s].count(v)){
             dfs(v, id);
         }
-        // Number of skips is in O(m)!
+        // Number of skips is in O(m)
         auto it = unvis.upper_bound(v);
         if(it == unvis.end()) break;
         v = *it;
