@@ -1,4 +1,3 @@
-// Strangely this solution is too slow
 // Solution to https://codeforces.com/problemset/problem/190/E
 #include <bits/stdc++.h>
  
@@ -118,18 +117,18 @@ int main(){
     ios_base::sync_with_stdio(false);   // unsync C- and C++-streams (stdio, iostream)
     cin.tie(NULL);  // untie cin from cout (no automatic flush before read)
  
-	int n, m; scanf("%d %d", &n, &m);
+	int n, m; cin >> n >> m;
     loop(i, m){
-    	int u, v; scanf("%d %d", &u, &v); --u, --v;
+    	int u, v; cin >> u >> v; --u, --v;
         adj[u].push_back(v);
         adj[v].push_back(u);
     }
     auto components = complement_connected_components(n);
-	printf("%d\n", components.size());
+	cout << components.size() << endl;
    	for(auto component : components){
-		printf("%d ", component.size());
-        for(auto v : component) printf("%d ", v + 1);
-        printf("\n");
+		cout <<  component.size() << " ";
+        for(auto v : component) cout << v + 1 << " ";
+		cout << endl;
     }
  
     /*
