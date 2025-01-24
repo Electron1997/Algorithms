@@ -35,7 +35,7 @@ vector<int> adj[N];
 int blocked[N] = {0};
 vector<int> unvisited;
  
-// Time: O((n + m)log(n))
+// Time: O(n + m)
 inline vector<int> complement_bfs(int s){
 	vector<int> component;
 	queue<int> q;
