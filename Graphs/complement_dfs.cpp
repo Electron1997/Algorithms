@@ -1,4 +1,4 @@
-// Solution to https://codeforces.com/problemset/problem/920/E
+// Solution to https://codeforces.com/problemset/problem/190/E
 #include <bits/stdc++.h>
 
 #define f first
@@ -14,33 +14,35 @@ using namespace std;
 typedef long long ll;
 typedef unsigned long long ull;
 
-/*  // SET WITH INDEXING
+/*
+// SET WITH INDEXING
 // Implements logarithmic find_by_order() and order_of_key()
+// erase does not work with less_equal<T>!
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace __gnu_pbds;
-typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> indexed_set;
+
+template<typename T>
+using indexed_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 */
 
 /*  // RANDOM NUMBER GENERATOR
 // rng() generates u.a.r. from [0, 2^32 - 1]
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 */
-
-constexpr size_t N = 2e5;
+constexpr size_t N = 5e5;
 
 set<int> adj[N], unvis;
-int lbl[N], sz[N] = {0};
 
-void dfs(int s, int id){
-    // Could check, but a bit slower
+// Time: O((n + m)log(n))
+void complement_dfs(int s, vector<int>& component){
     unvis.erase(s);
-    lbl[s] = id;
+	component.push_back(s);
     auto it = unvis.begin();
     if(it == unvis.end()) return;
     int v = *it;
     while(true){
         if(!adj[s].count(v)){
-            dfs(v, id);
+            complement_dfs(v, component);
         }
         // Number of skips is in O(m)
         auto it = unvis.upper_bound(v);
@@ -50,14 +52,15 @@ void dfs(int s, int id){
 }
 
 // Time: O((n + m)log(n))
-inline int count_components(int n){
+inline vector<vector<int>> complement_connected_components(int n){
     loop(i, n) unvis.insert(i);
-    int cnt = 0;
+    vector<vector<int>> components;
     while(unvis.size()){
-        dfs(*unvis.begin(), cnt);
-        ++cnt;
+		vector<int> component;
+        complement_dfs(*unvis.begin(), component);
+        components.push_back(component);
     }
-    return cnt;
+    return components;
 }
 
 int main(){
@@ -68,19 +71,19 @@ int main(){
     ios_base::sync_with_stdio(false);   // unsync C- and C++-streams (stdio, iostream)
     cin.tie(NULL);  // untie cin from cout (no automatic flush before read)
 
-    int n, m; cin >> n >> m;
+	int n, m; scanf("%d %d", &n, &m);
     loop(i, m){
-        int u, v; cin >> u >> v; --u; --v;
+    	int u, v; scanf("%d %d", &u, &v); --u, --v;
         adj[u].insert(v);
         adj[v].insert(u);
     }
-    int cnt = count_components(n);
-    loop(i, n){
-        ++sz[lbl[i]];
+    auto components = complement_connected_components(n);
+	printf("%d\n", components.size());
+   	for(auto component : components){
+		printf("%d ", component.size());
+        for(auto v : component) printf("%d ", v + 1);
+        printf("\n");
     }
-    sort(sz, sz + cnt);
-    cout << cnt << endl;
-    show(sz, cnt);
 
     /*
     auto stop = chrono::high_resolution_clock::now();
