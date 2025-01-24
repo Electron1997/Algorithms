@@ -30,7 +30,7 @@ using indexed_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 // rng() generates u.a.r. from [0, 2^32 - 1]
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 */
-constexpr size_t N = 5e5, M = 1000;
+constexpr size_t N = 5e5, M = 2000;
  
 vector<int> adj[N];
 bool merged[N], visited[M] = {false};
